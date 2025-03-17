@@ -4,37 +4,31 @@ using UnityEngine;
 
 public class Exploder : MonoBehaviour
 {
-    [SerializeField] private float _explosionForce;
-    [SerializeField] private float _explosionRadius;
-    [SerializeField] private float _scaleMultiplier = 0.5f;
-    [SerializeField] private float _splitChanceMultiplier = 0.5f;
-    [SerializeField] private float _splitChance = 100f;
-    [SerializeField] private int _splitRangeMin = 2;
-    [SerializeField] private int _splitRangeMax = 6;
+    [SerializeField] private InputReader _inputReader;
 
-    private void OnMouseUpAsButton()
+    private void OnEnable()
     {
-        Explode();
+        _inputReader.CubeClicked += Explode;
     }
 
-    private void Explode()
+    private void OnDisable()
     {
-        if (TrySplit())
-        {
-            Split();
-        }
-
-        foreach (Rigidbody affectedObject in GetObjectsInRange())
-        {
-            affectedObject.AddExplosionForce(_explosionForce, transform.position, _explosionRadius);
-        }
-
-        Destroy(gameObject);
+        _inputReader.CubeClicked -= Explode;
     }
 
-    private List<Rigidbody> GetObjectsInRange()
+    private void Explode(Cube cube)
     {
-        Collider[] hits = Physics.OverlapSphere(transform.position, _explosionRadius);
+        foreach (Rigidbody affectedObject in GetObjectsInRange(cube))
+        {
+            affectedObject.AddExplosionForce(cube.ExplosionForce, cube.transform.position, cube.ExplosionRadius);
+        }
+
+        Destroy(cube.gameObject);
+    }
+
+    private List<Rigidbody> GetObjectsInRange(Cube cube)
+    {
+        Collider[] hits = Physics.OverlapSphere(cube.transform.position, cube.ExplosionRadius);
         List<Rigidbody> objects = new();
 
         foreach (Collider hit in hits)
@@ -46,26 +40,5 @@ public class Exploder : MonoBehaviour
         }
 
         return objects;
-    }
-
-    private bool TrySplit()
-    {
-        int minValue = 0;
-        int maxValue = 99;
-
-        return Random.Range(minValue, maxValue) < _splitChance;
-    }
-
-    private void Split()
-    {
-        int splitCount = Random.Range(_splitRangeMin, _splitRangeMax);
-
-        _splitChance *= _splitChanceMultiplier;
-        gameObject.transform.localScale *= _scaleMultiplier;
-
-        for (int i = 0; i < splitCount; i++)
-        {
-            GameObject copy = Instantiate(gameObject);
-        }
     }
 }
