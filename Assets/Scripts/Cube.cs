@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 
 public class Cube : MonoBehaviour
@@ -9,21 +9,59 @@ public class Cube : MonoBehaviour
     [SerializeField] private float _scaleMultiplier = 0.5f;
     [SerializeField] private float _splitChanceMultiplier = 0.5f;
     [SerializeField] private float _splitChance = 100f;
+    [SerializeField] private int _splitRangeMin = 2;
+    [SerializeField] private int _splitRangeMax = 6;
 
     public float ExplosionForce => _explosionForce;
     public float ExplosionRadius => _explosionRadius;
+    public bool CanSplit { get; private set; }
+    public int SplitCount { get; private set; }
 
-    public bool TrySplit()
+    public event Action<Cube> Clicked;
+
+    private void Awake()
     {
-        int minValue = 0;
-        int maxValue = 99;
-
-        return UnityEngine.Random.Range(minValue, maxValue) < _splitChance;
+        Initiate();
     }
 
-    public void ReduceParameters()
+    private void OnMouseUpAsButton()
     {
-        _splitChance *= _splitChanceMultiplier;
-        gameObject.transform.localScale *= _scaleMultiplier;
+        Clicked(this);
+        StartCoroutine(DestroySelf());
+    }
+
+    private IEnumerator DestroySelf()
+    {
+        yield return null;
+        Destroy(gameObject);
+    }
+
+    private void Initiate()
+    {
+        int minChance = 0;
+        int maxChance = 99;
+
+        CanSplit = UnityEngine.Random.Range(minChance, maxChance) < _splitChance;
+        SplitCount = UnityEngine.Random.Range(_splitRangeMin, _splitRangeMax);
+
+        if (GetComponent(nameof(Renderer)))
+        {
+            GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
+        }
+    }
+
+    public void InitiateCopy(Cube cube)
+    {
+        cube.GetSplitParameters(out float splitChance, out Vector3 scale);
+        _splitChance = splitChance;
+        transform.localScale = scale;
+
+        Initiate();
+    }
+
+    public void GetSplitParameters(out float splitChance, out Vector3 scale)
+    {
+        splitChance = _splitChance * _splitChanceMultiplier;
+        scale = transform.localScale * _scaleMultiplier;
     }
 }

@@ -4,41 +4,26 @@ using UnityEngine;
 
 public class Exploder : MonoBehaviour
 {
-    [SerializeField] private InputReader _inputReader;
+    [SerializeField] private Spawner _spawner;
 
     private void OnEnable()
     {
-        _inputReader.CubeClicked += Explode;
+        _spawner.CubesSpawned += Explode;
     }
 
     private void OnDisable()
     {
-        _inputReader.CubeClicked -= Explode;
+        _spawner.CubesSpawned -= Explode;
     }
 
-    private void Explode(Cube cube)
+    private void Explode(Cube source, List<Cube> affectedCubes)
     {
-        foreach (Rigidbody affectedObject in GetObjectsInRange(cube))
+        foreach (Cube cube in affectedCubes)
         {
-            affectedObject.AddExplosionForce(cube.ExplosionForce, cube.transform.position, cube.ExplosionRadius);
-        }
-
-        Destroy(cube.gameObject);
-    }
-
-    private List<Rigidbody> GetObjectsInRange(Cube cube)
-    {
-        Collider[] hits = Physics.OverlapSphere(cube.transform.position, cube.ExplosionRadius);
-        List<Rigidbody> objects = new();
-
-        foreach (Collider hit in hits)
-        {
-            if (hit.attachedRigidbody != null)
+            if (cube.GetComponent(nameof(Rigidbody)))
             {
-                objects.Add(hit.attachedRigidbody);
+                cube.GetComponent<Rigidbody>().AddExplosionForce(source.ExplosionForce, source.transform.position, source.ExplosionRadius);
             }
         }
-
-        return objects;
     }
 }
