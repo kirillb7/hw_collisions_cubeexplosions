@@ -5,11 +5,11 @@ using UnityEngine;
 public class Spawner : MonoBehaviour
 {
     [SerializeField] private Cube _firstCube;
-    [SerializeField] private GameObject _cubePrefab;
+    [SerializeField] private Cube _cubePrefab;
 
     private List<Cube> _subscribedCubes = new List<Cube>();
 
-    public event Action<Cube, List<Cube>> CubesSpawned;
+    public event Action<Cube, List<Rigidbody>> CubesSpawned;
 
     private void OnEnable()
     {
@@ -30,18 +30,18 @@ public class Spawner : MonoBehaviour
 
         if (cube.CanSplit)
         {
-            List<Cube> spawnedCubes = new List<Cube>();
+            List<Rigidbody> spawnedBodies = new List<Rigidbody>();
 
             for (int i = 0; i < cube.SplitCount; i++)
             {
-                Cube copy = Instantiate(_cubePrefab, cube.transform.position, cube.transform.rotation).GetComponent<Cube>();
+                Cube copy = Instantiate(_cubePrefab.gameObject, cube.transform.position, cube.transform.rotation).GetComponent<Cube>();
 
                 copy.InitiateCopy(cube);
-                spawnedCubes.Add(copy);
+                spawnedBodies.Add(copy.Rigidbody);
                 SubscribeToCube(copy);
             }
 
-            CubesSpawned(cube, spawnedCubes);
+            CubesSpawned(cube, spawnedBodies);
         }
     }
 

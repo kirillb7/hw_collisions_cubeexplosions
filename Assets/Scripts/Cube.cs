@@ -12,15 +12,27 @@ public class Cube : MonoBehaviour
     [SerializeField] private int _splitRangeMin = 2;
     [SerializeField] private int _splitRangeMax = 6;
 
+    private Renderer _renderer;
+
     public float ExplosionForce => _explosionForce;
     public float ExplosionRadius => _explosionRadius;
     public bool CanSplit { get; private set; }
     public int SplitCount { get; private set; }
+    public Rigidbody Rigidbody { get; private set; }
 
     public event Action<Cube> Clicked;
 
+    private IEnumerator DestroySelf()
+    {
+        yield return null;
+        Destroy(gameObject);
+    }
+
     private void Awake()
     {
+        _renderer = GetComponent<Renderer>();
+        Rigidbody = GetComponent<Rigidbody>();
+
         Initiate();
     }
 
@@ -30,12 +42,6 @@ public class Cube : MonoBehaviour
         StartCoroutine(DestroySelf());
     }
 
-    private IEnumerator DestroySelf()
-    {
-        yield return null;
-        Destroy(gameObject);
-    }
-
     private void Initiate()
     {
         int minChance = 0;
@@ -43,11 +49,7 @@ public class Cube : MonoBehaviour
 
         CanSplit = UnityEngine.Random.Range(minChance, maxChance) < _splitChance;
         SplitCount = UnityEngine.Random.Range(_splitRangeMin, _splitRangeMax);
-
-        if (GetComponent(nameof(Renderer)))
-        {
-            GetComponent<Renderer>().material.color = UnityEngine.Random.ColorHSV();
-        }
+        _renderer.material.color = UnityEngine.Random.ColorHSV();
     }
 
     public void InitiateCopy(Cube cube)

@@ -16,14 +16,11 @@ public class Exploder : MonoBehaviour
         _spawner.CubesSpawned -= Explode;
     }
 
-    private void Explode(Cube source, List<Cube> affectedCubes)
+    private void Explode(Cube source, List<Rigidbody> affectedBodies)
     {
-        foreach (Cube cube in affectedCubes)
+        foreach (Rigidbody body in affectedBodies)
         {
-            if (cube.GetComponent(nameof(Rigidbody)))
-            {
-                cube.GetComponent<Rigidbody>().AddExplosionForce(source.ExplosionForce, source.transform.position, source.ExplosionRadius);
-            }
+            body.AddExplosionForce(source.ExplosionForce, source.transform.position, source.ExplosionRadius);
         }
     }
 }
