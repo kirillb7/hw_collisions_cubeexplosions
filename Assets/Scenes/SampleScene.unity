@@ -151,7 +151,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: -10}
-  m_LocalScale: {x: 20, y: 0.20000002, z: 20}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825266776}
@@ -256,7 +256,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: 10, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 0.2, z: 20}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825266776}
@@ -432,7 +432,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -10, z: 0}
-  m_LocalScale: {x: 20, y: 0.2, z: 20}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825266776}
@@ -466,7 +466,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -10, y: 0, z: 0}
-  m_LocalScale: {x: 20, y: 0.2, z: 20}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825266776}
@@ -922,7 +922,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 10, z: 0}
-  m_LocalScale: {x: 20, y: 0.2, z: 20}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825266776}
@@ -956,7 +956,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 20, y: 0.20000002, z: 20}
+  m_LocalScale: {x: 25, y: 1, z: 25}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 825266776}
@@ -1076,6 +1076,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a92fb242337770e4eaf0ec1a8b699592, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _firstCube: {fileID: 899050276}
   _spawner: {fileID: 565413271}
 --- !u!1001 &4151514128797457538
 PrefabInstance:

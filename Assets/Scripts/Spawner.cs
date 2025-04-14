@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour
 
     private List<Cube> _subscribedCubes = new List<Cube>();
 
-    public event Action<Cube, List<Rigidbody>> CubesSpawned;
+    public event Action<Cube, List<Cube>> CubesSpawned;
 
     private void OnEnable()
     {
@@ -24,36 +24,41 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    private void SpawnCubes(Cube cube)
+    private void TrySpawnCubes(Cube cube, bool canSplit)
     {
         UnsubscribeFromCube(cube);
 
-        if (cube.CanSplit)
+        if (canSplit)
         {
-            List<Rigidbody> spawnedBodies = new List<Rigidbody>();
-
-            for (int i = 0; i < cube.SplitCount; i++)
-            {
-                Cube copy = Instantiate(_cubePrefab.gameObject, cube.transform.position, cube.transform.rotation).GetComponent<Cube>();
-
-                copy.InitiateCopy(cube);
-                spawnedBodies.Add(copy.Rigidbody);
-                SubscribeToCube(copy);
-            }
-
-            CubesSpawned(cube, spawnedBodies);
+            SpawnCubes(cube);
         }
+    }
+
+    private void SpawnCubes(Cube cube)
+    {
+        List<Cube> spawnedCubes = new List<Cube>();
+
+        for (int i = 0; i < cube.SplitCount; i++)
+        {
+            Cube copy = Instantiate(_cubePrefab.gameObject, cube.transform.position, cube.transform.rotation).GetComponent<Cube>();
+
+            copy.InitiateCopy(cube);
+            spawnedCubes.Add(copy);
+            SubscribeToCube(copy);
+        }
+
+        CubesSpawned?.Invoke(cube, spawnedCubes);
     }
 
     private void SubscribeToCube(Cube cube)
     {
-        cube.Clicked += SpawnCubes;
+        cube.Clicked += TrySpawnCubes;
         _subscribedCubes.Add(cube);
     }
 
     private void UnsubscribeFromCube(Cube cube)
     {
-        cube.Clicked -= SpawnCubes;
+        cube.Clicked -= TrySpawnCubes;
         _subscribedCubes.Remove(cube);
     }
 }
